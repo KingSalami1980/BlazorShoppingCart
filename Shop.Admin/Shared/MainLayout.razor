@@ -1,0 +1,35 @@
+@inherits LayoutComponentBase
+
+@inject NavigationManager navManager;
+
+<div class="page">
+    @if (IsAdminLoggedIn)
+    {
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    }
+
+    <div class="main">
+        @if (IsAdminLoggedIn)
+        {
+            <div class="top-row px-4">
+                <a href="#" @onclick="Logout">Logout</a>
+            </div>
+        }
+
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
+
+@code {
+    public bool IsAdminLoggedIn = false;
+
+    public void Logout()
+    {
+        navManager.NavigateTo("/login");
+    }
+}
