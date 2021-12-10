@@ -49,6 +49,62 @@ namespace Shop.Logic.Services
                 response.Message = "An error occurred. Please try again !";
                 return response;
             }
+        }       
+        public CategoryModel SaveCategory(CategoryModel newCategory)
+        {
+            try
+            {
+                Category category = new Category();
+                category.Name = newCategory.Name;
+                _dbContext.Add(category);
+                _dbContext.SaveChanges();
+                return newCategory;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
+        }
+        public List<CategoryModel> GetCategories()
+        {
+            var data = _dbContext.Categories.ToList();
+            List<CategoryModel> categoryList = new List<CategoryModel>();
+            foreach (var category in data)
+            {
+                CategoryModel categoryModel = new CategoryModel();
+                categoryModel.Id = category.Id;
+                categoryModel.Name = category.Name;
+                categoryList.Add(categoryModel);
+            }
+            return categoryList;
+        }
+
+        public bool UpdateCategory(CategoryModel categoryToUpdate)
+        {
+            bool flag = false;
+            var category = _dbContext.Categories.Where(x => x.Id == categoryToUpdate.Id).FirstOrDefault();
+            if (category != null)
+            {
+                category.Name = categoryToUpdate.Name;
+                _dbContext.Categories.Update(category);
+                _dbContext.SaveChanges();
+                flag = true;
+            }
+            return flag;
+        }
+
+        public bool DeleteCategory(CategoryModel categoryToDelete)
+        {
+            bool flag = false;
+            var category = _dbContext.Categories.Where(x => x.Id == categoryToDelete.Id).FirstOrDefault();
+            if (category != null)
+            {
+                _dbContext.Categories.Remove(category);
+                _dbContext.SaveChanges();
+                flag = true;
+            }
+            return flag;
         }
     }
 }

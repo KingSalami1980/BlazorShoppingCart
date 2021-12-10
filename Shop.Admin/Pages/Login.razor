@@ -4,6 +4,7 @@
 @inject IAdminPanelService adminPanelService;
 
 @inject NavigationManager navManager;
+@inject ProtectedSessionStorage sessionStorage;
 
 <style>
     .loginBox {
@@ -87,6 +88,9 @@
 </div>
 
 @code {
+
+    [CascadingParameter]
+    public EventCallback notify { get; set; }
     public LoginModel loginModel { get; set; }
     public string alertMessage { get; set; }
 
@@ -101,6 +105,11 @@
         var response = await adminPanelService.AdminLogin(loginModel);
         if (response.Status == true)
         {
+            var user_response = response.Message.Split("|");
+            await sessionStorage.SetAsync("adminKey", user_response[0]);
+            await sessionStorage.SetAsync("adminName", user_response[1]);
+            await sessionStorage.SetAsync("adminEmail", user_response[2]);
+            await notify.InvokeAsync();
             navManager.NavigateTo("/");
         }
         else
