@@ -52,5 +52,15 @@ namespace Shop.Admin.Services
         {
             return await _httpClient.PostJsonAsync<ProductModel>("api/admin/SaveProduct", newProduct);
         }
+
+        public async Task<List<StockModel>> GetProductStock()
+        {
+            return await _httpClient.GetJsonAsync<List<StockModel>>("api/Admin/GetProductStock");
+        }
+
+        public async Task<bool> UpdateProductStock(StockModel stock)
+        {
+            return await _httpClient.PostJsonAsync<bool>("api/Admin/UpdateProductStock", stock);
+        }
     }
 }

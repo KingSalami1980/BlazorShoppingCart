@@ -92,5 +92,21 @@ namespace Shop.Api.Controllers
             var data = _adminService.DeleteProduct(ProductToDelete);
             return Ok(data);
         }
+
+        [HttpGet]
+        [Route("GetProductStock")]
+        public IActionResult GetProductStock()
+        {
+            var data = _adminService.GetProductStock();
+            return Ok(data);
+        }
+
+        [HttpPost]
+        [Route("UpdateProductStock")]
+        public IActionResult UpdateProductStock(StockModel stock)
+        {
+            var data = _adminService.UpdateProductStock(stock);
+            return Ok(data);
+        }
     }
 }

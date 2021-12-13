@@ -79,7 +79,6 @@ namespace Shop.Logic.Services
             }
             return categoryList;
         }
-
         public bool UpdateCategory(CategoryModel categoryToUpdate)
         {
             bool flag = false;
@@ -93,7 +92,6 @@ namespace Shop.Logic.Services
             }
             return flag;
         }
-
         public bool DeleteCategory(CategoryModel categoryToDelete)
         {
             bool flag = false;
@@ -106,7 +104,6 @@ namespace Shop.Logic.Services
             }
             return flag;
         }
-
         public List<ProductModel> GetProducts()
         {
             List<Category> categoryData = _dbContext.Categories.ToList();
@@ -129,7 +126,6 @@ namespace Shop.Logic.Services
 
             return _productList;
         }
-
         public bool DeleteProduct(ProductModel productToDelete)
         {
             bool flag = false;
@@ -165,7 +161,6 @@ namespace Shop.Logic.Services
             }
 
         }
-
         public int GetNewProductId()
         {
             try
@@ -177,6 +172,42 @@ namespace Shop.Logic.Services
             {
                 throw;
             }
+        }
+
+        public List<StockModel> GetProductStock()
+        {
+            List<StockModel> productStock = new List<StockModel>();
+
+            List<Category> categoryData = _dbContext.Categories.ToList();
+            List<Product> productData = _dbContext.Products.ToList();
+            foreach (var p in productData)
+            {
+                StockModel stockModel = new()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Stock = p.Stock,
+                    CategoryName = categoryData.Where(x => x.Id == p.CategoryId).Select(x => x.Name).FirstOrDefault(),
+                };
+
+                productStock.Add(stockModel);
+            }
+
+            return productStock;
+        }
+
+        public bool UpdateProductStock(StockModel stock)
+        {
+            bool flag = false;
+            var product = _dbContext.Products.Where(x => x.Id == stock.Id).FirstOrDefault();
+            if (product is not null)
+            {
+                product.Stock = stock.Stock + stock.NewStock;
+                _dbContext.Products.Update(product);
+                _dbContext.SaveChanges();
+                flag = true;
+            }
+            return flag;
         }
     }
 }

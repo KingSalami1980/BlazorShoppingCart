@@ -259,6 +259,9 @@ else
         productModel.FileContent = ms.ToArray();
         ms.Close();
 
+        Message = "Product Added Successfully !!";
+        ToggleSuccessPopup();
+
         await adminPanelService.SaveProduct(productModel);
         await GetProducts();
         ClearForm();
