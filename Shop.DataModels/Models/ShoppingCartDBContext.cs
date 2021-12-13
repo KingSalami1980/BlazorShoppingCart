@@ -19,6 +19,7 @@ namespace Shop.DataModels.Models
 
         public virtual DbSet<AdminInfo> AdminInfos { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -57,6 +58,19 @@ namespace Shop.DataModels.Models
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.ToTable("Category");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.ToTable("Product");
+
+                entity.Property(e => e.ImageUrl)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)

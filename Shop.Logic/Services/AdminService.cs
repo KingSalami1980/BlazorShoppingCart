@@ -106,5 +106,77 @@ namespace Shop.Logic.Services
             }
             return flag;
         }
+
+        public List<ProductModel> GetProducts()
+        {
+            List<Category> categoryData = _dbContext.Categories.ToList();
+            List<Product> productData = _dbContext.Products.ToList();
+            List<ProductModel> _productList = new List<ProductModel>();
+            foreach (var p in productData)
+            {
+                ProductModel productModel = new()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Stock = p.Stock,
+                    ImageUrl = p.ImageUrl,
+                    CategoryId = p.CategoryId,
+                    CategoryName = categoryData.Where(x => x.Id == p.CategoryId).Select(x => x.Name).FirstOrDefault()
+                };
+                _productList.Add(productModel);
+            }
+
+            return _productList;
+        }
+
+        public bool DeleteProduct(ProductModel productToDelete)
+        {
+            bool flag = false;
+            var product = _dbContext.Products.Where(x => x.Id == productToDelete.Id).FirstOrDefault();
+            if (product != null)
+            {
+                _dbContext.Products.Remove(product);
+                _dbContext.SaveChanges();
+                flag = true;
+            }
+            return flag;
+        }
+        public ProductModel SaveProduct(ProductModel newProduct)
+        {
+            try
+            {
+                Product product = new()
+                {
+                    Name = newProduct.Name,
+                    Price = newProduct.Price,
+                    ImageUrl = newProduct.ImageUrl,
+                    CategoryId = newProduct.CategoryId,
+                    Stock = newProduct.Stock
+                };
+
+                _dbContext.Add(product);
+                _dbContext.SaveChanges();
+                return newProduct;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public int GetNewProductId()
+        {
+            try
+            {
+                int nextProductId = _dbContext.Products.ToList().OrderByDescending(x => x.Id).Select(x => x.Id).FirstOrDefault();
+                return nextProductId;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

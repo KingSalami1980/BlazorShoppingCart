@@ -38,5 +38,19 @@ namespace Shop.Admin.Services
         {
             return await _httpClient.PostJsonAsync<bool>("api/admin/DeleteCategory", categoryToDelete);
         }
+
+        public async Task<List<ProductModel>> GetProducts()
+        {
+            return await _httpClient.GetJsonAsync<List<ProductModel>>("api/admin/GetProducts");
+        }
+
+        public async Task<bool> DeleteProduct(ProductModel productToDelete)
+        {
+            return await _httpClient.PostJsonAsync<bool>("api/admin/DeleteProduct", productToDelete);
+        }
+        public async Task<ProductModel> SaveProduct(ProductModel newProduct)
+        {
+            return await _httpClient.PostJsonAsync<ProductModel>("api/admin/SaveProduct", newProduct);
+        }
     }
 }
